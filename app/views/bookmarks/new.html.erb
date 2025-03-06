@@ -1,0 +1,7 @@
+<%= simple_form_for @bookmark, url: list_bookmarks_path(@list) do |f| %>
+  <%= f.input :comment, as: :text, placeholder: "Laissez votre commentaire ici..." %>
+  <%= f.association :movie, collection: Movie.all, label_method: :title, value_method: :id, prompt: "Choisissez un film" %>
+  <%= f.hidden_field :list_id, value: @list.id %> <!-- Associe le signet à la liste -->
+  <%= f.button :submit, "Ajouter un commentaire" %>
+<% end %>
+

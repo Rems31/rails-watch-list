@@ -1,0 +1,50 @@
+<% if @list == List.first %>
+  <div class="hp-banner">
+    <div class="hp-banner-content">
+      <h1>Bienvenue dans le monde magique de Harry Pot'd'beurre ! 🪄</h1>
+    </div>
+  </div>
+<% end %>
+
+<h1><%= @list.name %></h1>
+
+<h3>Films dans cette liste :</h3>
+
+<ul>
+  <% @list.movies.each do |movie| %>
+    <li>
+      <strong><%= movie.title %></strong> - <%= movie.rating %>/10
+      <br>
+      <em><%= movie.overview %></em> <!-- Affiche l'aperçu du film -->
+      <br>
+      <img src="<%= movie.poster_url %>" alt="<%= movie.title %> Poster" width="150"> <!-- Affiche l'affiche du film -->
+      <br>
+      <%= link_to "Supprimer", bookmark_path(@list.bookmarks.find_by(movie: movie)), method: :delete, data: { confirm: "Êtes-vous sûr ?" } %>
+    </li>
+  <% end %>
+</ul>
+
+
+<h2>Ajouter un film et un commentaire</h2>
+<%= form_with model: @bookmark, url: list_bookmarks_path(@list), local: true do |f| %>
+  <div>
+    <%= f.label :movie_id, "Choisir un film" %>
+    <%= f.collection_select :movie_id, Movie.all, :id, :title, prompt: "Choisissez un film" %>
+  </div>
+
+  <div>
+    <%= f.label :comment, "Commentaire" %>
+    <%= f.text_area :comment %>
+  </div>
+
+  <%= f.submit "Ajouter", class: "btn btn-primary" %>
+<% end %>
+
+<%= link_to 'Ajouter un commentaire', new_list_bookmark_path(@list) %>
+
+<!-- Afficher les signets déjà créés -->
+<% @list.bookmarks.each do |bookmark| %>
+  <p><%= bookmark.comment %> - <%= bookmark.movie.title %></p>
+<% end %>
+
+<%= link_to "Retour aux listes", lists_path, class: "btn btn-secondary mt-3" %>
